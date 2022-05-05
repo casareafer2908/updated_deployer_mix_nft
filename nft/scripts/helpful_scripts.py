@@ -92,13 +92,13 @@ def get_publish_source():
         return True
 
 
-def get_breed(breed_number):
-    switch = {0: "PUG", 1: "SHIBA_INU", 2: "ST_BERNARD"}
-    return switch[breed_number]
+def get_style(style_number):
+    switch = {0: "KATANA", 1: "SPARKS", 2: "SWORD", 3: "THUNDER", 4: "WATER"}
+    return switch[style_number]
 
 
 def fund_with_link(
-    contract_address, account=None, link_token=None, amount=1000000000000000000
+    contract_address, account=None, link_token=None, amount=100000000000000000
 ):
     account = account if account else get_account()
     link_token = link_token if link_token else get_contract("link_token")

@@ -3,72 +3,123 @@
 pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
+import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract AdvancedCollectible is ERC721, VRFConsumerBase {
+contract AdvancedCollectible is ERC721, VRFConsumerBaseV2, Ownable {
+    //vrf coordinator stuff
+    VRFCoordinatorV2Interface COORDINATOR;
+    uint64 s_subscriptionId;
+    bytes32 internal keyHash;
+    uint32 callbackGasLimit = 100000;
+    uint16 requestConfirmations = 3;
+    uint32 numWords = 1;
+    uint256[] public s_randomWords;
+    uint256 public s_requestId;
+    address s_owner;
+
+    //Contract variables
     uint256 public tokenCounter;
-    enum Breed {
-        PUG,
-        SHIBA_INU,
-        ST_BERNARD
+    using Strings for uint256;
+    enum Style {
+        KATANA,
+        SPARKS,
+        SWORD,
+        THUNDER,
+        WATER
     }
     // add other things
-    mapping(bytes32 => address) public requestIdToSender;
-    mapping(bytes32 => string) public requestIdToTokenURI;
-    mapping(uint256 => Breed) public tokenIdToBreed;
-    mapping(bytes32 => uint256) public requestIdToTokenId;
-    event RequestedCollectible(bytes32 indexed requestId);
+    mapping(uint256 => address) public requestIdToSender;
+    mapping(uint256 => string) public requestIdToTokenURI;
+    mapping(uint256 => Style) public tokenIdToStyle;
+    mapping(uint256 => uint256) public requestIdToTokenId;
+    event RequestedCollectible(uint256 indexed requestId);
     // New event from the video!
-    event ReturnedCollectible(bytes32 indexed requestId, uint256 randomNumber);
-
-    bytes32 internal keyHash;
-    uint256 internal fee;
+    event ReturnedCollectible(
+        uint256 indexed requestId,
+        uint256[] randomNumber
+    );
+    string internal uriPrefix =
+        "https://ipfs.io/ipfs/QmZZa5TP4MWw7inj2ZMqbz9yG8279ayMAa4gEbZq2Kycqg?filename=loading.gif";
 
     constructor(
-        address _VRFCoordinator,
+        address vrfCoordinator,
         address _LinkToken,
-        bytes32 _keyhash
+        bytes32 _keyhash,
+        uint64 subscriptionId
     )
         public
-        VRFConsumerBase(_VRFCoordinator, _LinkToken)
-        ERC721("Dogie", "DOG")
+        VRFConsumerBaseV2(vrfCoordinator)
+        ERC721("SecondCollection", "sex&thecity")
     {
+        COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);
+        s_subscriptionId = subscriptionId;
         tokenCounter = 0;
         keyHash = _keyhash;
-        fee = 0.1 * 10**18;
     }
 
-    function createCollectible(string memory tokenURI)
-        public
-        returns (bytes32)
-    {
-        bytes32 requestId = requestRandomness(keyHash, fee);
-        requestIdToSender[requestId] = msg.sender;
-        requestIdToTokenURI[requestId] = tokenURI;
-        emit RequestedCollectible(requestId);
+    function createCollectible() public returns (bytes32) {
+        //gets random number from chainlink oracle
+        s_owner = msg.sender;
+        s_requestId = COORDINATOR.requestRandomWords(
+            keyHash,
+            s_subscriptionId,
+            requestConfirmations,
+            callbackGasLimit,
+            numWords
+        );
+        //maps the caller address with the randomness request
+        requestIdToSender[s_requestId] = msg.sender;
+        emit RequestedCollectible(s_requestId);
     }
 
-    function fulfillRandomness(bytes32 requestId, uint256 randomNumber)
-        internal
-        override
-    {
-        address dogOwner = requestIdToSender[requestId];
-        string memory tokenURI = requestIdToTokenURI[requestId];
+    function fulfillRandomWords(
+        uint256 requestId,
+        uint256[] memory randomNumber
+    ) internal override {
+        //pulls the caller address from memory
+        address tokenOwner = requestIdToSender[requestId];
+
+        //gets the next token id
         uint256 newItemId = tokenCounter;
-        _safeMint(dogOwner, newItemId);
-        setTokenURI(newItemId, tokenURI);
-        Breed breed = Breed(randomNumber % 3);
-        tokenIdToBreed[newItemId] = breed;
+        //kaboooom
+        _safeMint(tokenOwner, newItemId);
+        //sets tokenuri
+        string memory _tokenUri = tokenURI(newItemId);
+        //maps the tokenUri to the requestID
+        requestIdToTokenURI[requestId] = _tokenUri;
+        //pics a style using the random number
+        Style style = Style(randomNumber[0] % 5);
+        //maps the style of the {tokenid}
+        tokenIdToStyle[newItemId] = style;
+        //maps the {tokenid} to the request
         requestIdToTokenId[requestId] = newItemId;
         tokenCounter = tokenCounter + 1;
         emit ReturnedCollectible(requestId, randomNumber);
     }
 
-    function setTokenURI(uint256 tokenId, string memory _tokenURI) public {
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "ERC721: transfer caller is not owner nor approved"
-        );
-        setTokenURI(tokenId, _tokenURI);
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        virtual
+        override
+        returns (string memory)
+    {
+        string memory baseURI = _baseURI();
+        return
+            //base uri will never be under 0 lenght because I initialized it with the loading cat
+            bytes(baseURI).length > 0
+                ? string(abi.encodePacked(baseURI, tokenId.toString()))
+                : "";
+    }
+
+    function _baseURI() internal view virtual override returns (string memory) {
+        return uriPrefix;
+    }
+
+    function setUriPrefix(string memory _uriPrefix) public onlyOwner {
+        uriPrefix = _uriPrefix;
     }
 }

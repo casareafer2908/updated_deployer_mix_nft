@@ -10,20 +10,26 @@ dog_metadata_dic = {
     "ST_BERNARD": "ipfs://QmbBnUjyHHN7Ytq9xDsYF9sucZdDJLRkWz7vnZfrjMXMxs?filename=2-ST_BERNARD.json",
 }
 
+
 def main():
     print("Working on " + network.show_active())
+    # gets the latest deployed contract
     advanced_collectible = AdvancedCollectible[len(AdvancedCollectible) - 1]
+    # reads from the blockchain how many tokens were minted
     number_of_advanced_collectibles = advanced_collectible.tokenCounter()
     print(
         "The number of tokens you've deployed is: "
         + str(number_of_advanced_collectibles)
     )
+    # for each token
     for token_id in range(number_of_advanced_collectibles):
+        # reads the breed from the token in the blockchain
         breed = get_breed(advanced_collectible.tokenIdToBreed(token_id))
+        # if the token uri doesnt start with https:// (we asume that we didnt set up the token uri yet)
         if not advanced_collectible.tokenURI(token_id).startswith("https://"):
             print("Setting tokenURI of {}".format(token_id))
-            set_tokenURI(token_id, advanced_collectible,
-                         dog_metadata_dic[breed])
+            # token id + contract + token breed image link
+            set_tokenURI(token_id, advanced_collectible, dog_metadata_dic[breed])
         else:
             print("Skipping {}, we already set that tokenURI!".format(token_id))
 
