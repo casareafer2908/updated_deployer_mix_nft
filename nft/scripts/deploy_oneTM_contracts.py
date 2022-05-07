@@ -11,9 +11,9 @@ def main():
     print(network.show_active())
     # human readable plz
     print(f"Token price ==> {Web3.fromWei(setPrice, 'ether')} ETH")
-    advanced_collectible = OneTMShowOff.deploy(
+    one_tm_show_off = OneTMShowOff.deploy(
         setPrice,
         {"from": dev},
         publish_source=get_publish_source(),
     )
-    return advanced_collectible
+    return one_tm_show_off
