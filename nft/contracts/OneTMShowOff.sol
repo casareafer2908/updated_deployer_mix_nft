@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-// Contract by pr0xy.io
+// Contract by pr0xy.io <-- these guys are fkin amazing
 
 pragma solidity ^0.8.7;
 
@@ -45,7 +45,7 @@ contract OneTMShowOff is ERC721Enumerable, Ownable {
     mapping(address => bool) public presaleParticipants;
 
     // Sets `price` upon deployment
-    constructor(uint256 _price) ERC721("SuperNormalbyZipcy", "SUPERNORMAL") {
+    constructor(uint256 _price) ERC721("OneTMShowOff", "OneTM") {
         setPrice(_price);
     }
 

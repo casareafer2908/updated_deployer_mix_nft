@@ -80,9 +80,8 @@ Or you can run the above in your shell.
 
 # Usage
 
-There are 2 types of NFTs here. 
-1. `SimpleCollectibles.sol`
-2. `AdvancedCollectibles.sol`
+There's 1 type of NFTs here. 
+1. `ERC721.sol`
 
 They each deploy unique dogs. The advanced version gives you a random breed (out of a Pug, Shiba Inu, and St. Bernard).
 
@@ -92,20 +91,17 @@ You can 100% use the rinkeby testnet to see your NFTs rendered on opensea, but i
 
 ### Running Scripts
 
-The simple collectibles work on a local network,  however the advanced requires a testnet. We default to rinkeby since that seems to be the testing standard for NFT platforms. You will need testnet rinkeby ETH and testnet Rinkeby LINK. You can find faucets for both in the [Chainlink documentation](https://docs.chain.link/docs/link-token-contracts#rinkeby). 
+It needs a testnet. We default to rinkeby since that seems to be the testing standard for NFT platforms. You will need testnet rinkeby ETH and testnet Rinkeby LINK. You can find faucets for both in the [Chainlink documentation](https://docs.chain.link/docs/link-token-contracts#rinkeby). 
 
-# For the Simple ERC721
-```
-brownie run scripts/simple_collectible/deploy_simple.py --network rinkeby
-brownie run scripts/simple_collectible/create_collectible.py --network rinkeby
-```
-
-# For the Advanced ERC721
+# To deploy and create nfts follow these steps
 
 You'll need [testnet Rinkeby](https://faucet.rinkeby.io/) and [testnet LINK](https://rinkeby.chain.link/) in the wallet associated with your private key. 
 
 ```
-brownie run scripts/advanced_collectible/deploy_advanced.py --network rinkeby
+brownie run scripts/deploy_oneTM_contracts.py --network rinkeby
+```
+
+```
 brownie run scripts/advanced_collectible/create_collectible.py --network rinkeby
 ```
 Then:
