@@ -8,7 +8,8 @@ def main():
     dev = accounts.add(config["wallets"]["from_key"])
     # get the latest of the contract to work with
     advanced_collectible = AdvancedCollectible[len(AdvancedCollectible) - 1]
-    fund_with_link(advanced_collectible.address)
+    # no need to fund link in VRFv2
+    # fund_with_link(advanced_collectible.address)
     # creates collectible with uri set as "none"
     transaction = advanced_collectible.createCollectible({"from": dev})
     print("Waiting on second transaction...")
