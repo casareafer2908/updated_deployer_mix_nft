@@ -7,7 +7,7 @@ mintAmmount = 2
 payable = mintAmmount * 0.01
 
 
-def main():
+def mint2():
     dev = accounts.add(config["wallets"]["from_key"])
 
     # Get the latest deployed contract
