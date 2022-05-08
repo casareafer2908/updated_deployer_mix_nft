@@ -10,7 +10,7 @@ def main():
     dev = accounts.add(config["wallets"]["from_key"])
     print(network.show_active())
     # human readable plz
-    print(f"Token price ==> {Web3.fromWei(setPrice, 'ether')} ETH")
+    print(f"Set token price ==> {Web3.fromWei(setPrice, 'ether')} ETH")
     one_tm_show_off = OneTMShowOff.deploy(
         setPrice,
         {"from": dev},

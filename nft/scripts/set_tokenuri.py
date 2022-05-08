@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from brownie import SimpleCollectible, AdvancedCollectible, accounts, network, config
+from brownie import AdvancedCollectible, accounts, network, config
 from metadata import sample_metadata
 from scripts.helpful_scripts import get_breed, OPENSEA_FORMAT
 
