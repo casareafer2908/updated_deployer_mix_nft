@@ -2,7 +2,7 @@ from scripts.mint_oneTM_nft import mint2
 
 
 def deploy10():
-    toDeploy = 10
+    toDeploy = 5
     for n in range(toDeploy):
         print(f"run number {(n + 1)}")
         mint2()
