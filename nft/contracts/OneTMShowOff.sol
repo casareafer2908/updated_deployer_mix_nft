@@ -51,7 +51,7 @@ contract OneTMShowOff is ERC721Enumerable, Ownable {
 
         require(isActive, "Not Active");
         require(_amount < 3, "Amount Denied");
-        require(supply + _amount < 11, "Supply Denied");
+        require(supply + _amount < 556, "Supply Denied");
         require(tx.origin == msg.sender, "Contract Denied");
         require(msg.value >= price * _amount, "Ether Amount Denied");
 
