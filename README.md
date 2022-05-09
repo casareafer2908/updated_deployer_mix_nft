@@ -63,6 +63,36 @@ You can also [learn how to set environment variables easier](https://www.twilio.
 
 Or you can run the above in your shell. 
 
+### You need to create a file .env to add your own test info
+
+Example of .env file
+
+```
+### remove the '#' to use the environment variables
+# Infura project id
+ export WEB3_INFURA_PROJECT_ID=asdasdasdasd
+
+# Test wallet key
+ export PRIVATE_KEY=asdasdasdasd
+
+#test wallet 2 key (I used this for tests)
+ export PRIVATE_KEY_TEST=asdasdasd
+
+# test wallet address
+ export VAULT_ADDRESS=asdadasdasd
+
+# chainling vrf consumer id  (not needed for show off)
+# export VRF_SUBSCRIPTION_ID= asdasdasd
+
+ export ETHERSCAN_TOKEN=asdasdasd
+
+# export IPFS_URL=http://127.0.0.1:5001
+# export UPLOAD_IPFS=true
+
+# export PINATA_API_KEY='asdasdasdasd'
+# export PINATA_API_SECRET='asdasdasdasd'
+```
+
 
 # Usage
 
@@ -76,6 +106,7 @@ You can 100% use the rinkeby testnet to see your NFTs rendered on opensea, but i
 ### Running Scripts
 
 It needs a testnet. We default to rinkeby since that seems to be the testing standard for NFT platforms. You will need testnet rinkeby ETH and testnet Rinkeby LINK. You can find faucets for both in the [Chainlink documentation](https://docs.chain.link/docs/link-token-contracts#rinkeby). 
+
 
 # To deploy and create nfts follow these steps
 
